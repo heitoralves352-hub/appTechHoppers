@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import {
   Pressable,
   View,
@@ -6,128 +6,121 @@ import {
   StyleSheet,
   SafeAreaView,
   ScrollView,
+  TextInput,
+  Alert,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Rodape from '../../Components/Rodape';
-import { TextInput } from 'react-native';
+import api from '../services/api';
 
-import api from '../services/api'; 
+export default function TelaCadastroColmeia({ navigation, route }) {
+  // Se a tela foi aberta sem parâmetros, considera que é um cadastro novo (0)
+  const idcolmeia = route.params?.idcolmeia ?? 0;
+  const editando = idcolmeia !== 0;
 
-export default function TelaCadastroColmeia({
-  navigation,
-  route,
-}: {
-  navigation: any,
-  route: any,
-}) {
   const [nome, setNome] = useState('');
   const [local, setLocal] = useState('');
-  const [capmax, setCapMax] = useState(0);
-  const [id, setId] = useState(0);
+  const [capmax, setCapMax] = useState('');
 
-  useEffect(() => {
-    async function buscarColmeia(codigo: number) {
-      try {
-        const response = await api.get(`/colmeia/${codigo}`);
-        setId(response.data.id);
-        setNome(response.data.nome);
-        setLocal(response.data.local);
-        setCapMax(response.data.capmax);
-      } catch (err) {
-        console.log(err);
+  // Roda toda vez que a tela aparece (não só na primeira vez)
+  useFocusEffect(
+    useCallback(() => {
+      if (editando) {
+        buscarColmeia(idcolmeia);
+      } else {
+        limparCampos();
       }
+    }, [idcolmeia])
+  );
+
+  async function buscarColmeia(codigo) {
+    try {
+      const { data } = await api.get(`/colmeia/${codigo}`);
+      setNome(data.nome);
+      setLocal(data.local);
+      setCapMax(String(data.capmax));
+    } catch (err) {
+      Alert.alert('Erro', 'Não foi possível carregar os dados da colmeia.');
+    }
+  }
+
+  function limparCampos() {
+    setNome('');
+    setLocal('');
+    setCapMax('');
+  }
+
+  async function salvarColmeia() {
+    if (!nome.trim() || !local.trim() || !capmax.trim()) {
+      Alert.alert('Atenção', 'Preencha todos os campos.');
+      return;
     }
 
-    const codigo = route.params.idcolmeia;
-
-    if (codigo != 0) 
-      buscarColmeia(codigo);
-  }, []);
-
-  async function cadastrarProduto() {
     const colmeia = {
-      nome,
-      local,
-      capmax,
+      nome: nome.trim(),
+      local: local.trim(),
+      capmax: Number(capmax),
     };
 
     try {
-      if (route.params.idcolmeia == 0) {
-        await api.post('/colmeia', colmeia);
-        alert('Produto Salvo com Sucesso!!!');
+      if (editando) {
+        await api.put(`/colmeia/${idcolmeia}`, colmeia);
+        Alert.alert('Sucesso', 'Colmeia atualizada com sucesso!');
       } else {
-        await api.put(`/colmeia/${route.params.idcolmeia}`, colmeia);
-        alert('Produto Atualizado com Sucesso!!!');
+        await api.post('/colmeia', colmeia);
+        Alert.alert('Sucesso', 'Colmeia cadastrada com sucesso!');
       }
+      navigation.navigate('TelaListagem');
     } catch (err) {
-      console.log(err);
+      Alert.alert('Erro', 'Não foi possível salvar. Verifique se a API está ligada.');
     }
-
-    navigation.navigate('TelaInicial');
-  }
-
-  function onPressFunction() {
-    navigation.openDrawer();
   }
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.topo}>
-        <Pressable onPress={onPressFunction}>
+        <Pressable onPress={() => navigation.openDrawer()}>
           <Text style={styles.text}>
-            <MaterialCommunityIcons
-              name="reorder-horizontal"
-              size={35}
-              color="#black"
-            />
-            Cadastro de Colmeia
+            <MaterialCommunityIcons name="reorder-horizontal" size={35} color="black" />
+            {editando ? 'Editar Colmeia' : 'Cadastro de Colmeia'}
           </Text>
         </Pressable>
       </View>
+
       <ScrollView style={styles.conteudo} contentContainerStyle={styles.conteudoInterno}>
         <Text style={styles.text2}>Preencha os dados de sua colmeia!</Text>
 
         <Text style={styles.tituloInput}>Nome</Text>
         <TextInput
           style={styles.input}
-          placeholder="Digite o nome do produto"
-          defaultValue={nome}
-          keyboardType="default"
-          onChangeText={(valor) => setNome(String(valor))}
+          placeholder="Digite o nome da colmeia"
+          value={nome}
+          onChangeText={setNome}
         />
+
         <Text style={styles.tituloInput}>Localização</Text>
         <TextInput
           style={styles.input}
           placeholder="Digite o local em que está a colmeia"
-          defaultValue={local}
-          keyboardType="default"
-          onChangeText={(valor) => setLocal(String(valor))}
+          value={local}
+          onChangeText={setLocal}
         />
+
         <Text style={styles.tituloInput}>Capacidade Máxima</Text>
         <TextInput
           style={styles.input}
           placeholder="Digite a capacidade máxima da colmeia"
-          defaultValue={capmax}
-          keyboardType="default"
-          onChangeText={(valor) => setCapMax(Number(valor))}
-        />
-        <Text style={styles.tituloInput}>Identificação</Text>
-        <TextInput
-          style={styles.input}
-          defaultValue={id}
-          placeholder="id"
+          value={capmax}
           keyboardType="numeric"
-          onChangeText={(valor) => setId(Number(valor))}
+          onChangeText={setCapMax}
         />
-        <Pressable
-        style={[styles.botao, { backgroundColor: '#402b2b' }]}
-        onPress={() => cadastrarProduto()}>
-        <MaterialCommunityIcons name={'content-save'} size={24} color={'#fff'} />
-        <Text style={styles.textoBotao}> Salvar </Text>
-      </Pressable>
+
+        <Pressable style={styles.botao} onPress={salvarColmeia}>
+          <MaterialCommunityIcons name="content-save" size={24} color="#fff" />
+          <Text style={styles.textoBotao}> Salvar </Text>
+        </Pressable>
       </ScrollView>
-      
-      
 
       <Rodape />
     </SafeAreaView>
@@ -137,28 +130,24 @@ export default function TelaCadastroColmeia({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'left',
-    justifyContent: 'left',
     backgroundColor: '#F9E3AE',
   },
   topo: {
     height: 50,
     flexDirection: 'row',
-    justifyContent: 'left',
     alignItems: 'center',
   },
   conteudo: {
     borderTopColor: 'black',
     borderTopWidth: 1,
-    flexDirection: 'column',
     flex: 1,
   },
-
-    conteudoInterno: {
+  conteudoInterno: {
     alignItems: 'center',
+    paddingVertical: 10,
   },
-
   input: {
+    width: '90%',
     height: 50,
     paddingLeft: 10,
     borderWidth: 2,
@@ -173,41 +162,32 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     marginTop: 5,
     color: '#402b2b',
-    fontWeight: 600,
+    fontWeight: '600',
     marginLeft: 20,
     alignSelf: 'flex-start',
   },
-
   text: {
     fontSize: 25,
     fontWeight: 'bold',
-    marginBotton: 10,
   },
   text2: {
     fontSize: 22,
     fontWeight: 'bold',
-    marginBotton: 10,
-  },
-  text3: {
-    fontSize: 22,
-    fontWeight: '',
-    marginBotton: 10,
-    color: 'white',
+    marginBottom: 10,
   },
   botao: {
+    width: 200,
     height: 50,
     borderRadius: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 50,
-    paddingLeft: 5,
     marginVertical: 30,
+    backgroundColor: '#402b2b',
   },
-
   textoBotao: {
     fontSize: 20,
-    fontWeight: 600,
+    fontWeight: '600',
     color: '#fff',
   },
 });
