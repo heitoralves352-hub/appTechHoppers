@@ -2,12 +2,14 @@ import { View, StyleSheet } from 'react-native';
 import { Pressable, Text, SafeAreaView} from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useNavigation } from "@react-navigation/native";
-
+import { useAuth } from '../src/contexts/AuthContext';
 
 
 export default function Rodape() { 
 
    const navigation = useNavigation();
+
+   const { sair } = useAuth();
    
   return (
     <View style={styles.container}>
@@ -17,7 +19,7 @@ export default function Rodape() {
             Home
           </Text>
         </Pressable>        
-         <Pressable   onPress={() => navigation.navigate('Capa')} style={[{backgroundColor: '#black'}, styles.botaorodape]}>
+         <Pressable   onPress={sair} style={[{backgroundColor: '#black'}, styles.botaorodape]}>
           <MaterialCommunityIcons name="keyboard-backspace" size={20} color="#black" />
           <Text style={styles.textorodape}>
             Sair

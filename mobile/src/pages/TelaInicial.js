@@ -49,7 +49,7 @@ export default function TelaInicial() {
           cor="#402b2b"
           nomeIcone="map"
           corIcone="white"
-          onPress={() => imprimir('Maps')}
+          onPress={() => alert('Em breve: mapa com a localização das colmeias!')}
         />
         <Botao
           titulo="Cadastro de colmeias"

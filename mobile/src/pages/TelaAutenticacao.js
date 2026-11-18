@@ -1,6 +1,6 @@
 // Incluir a função navegar entre as telas
 import { useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { useAuth } from '../contexts/AuthContext';
 import {
   Pressable,
   View,
@@ -15,13 +15,12 @@ import Botao from '../../Components/Botao';
 
 export default function TelaAutenticacao() {
   // Navegar entre as telas
-  const navigation = useNavigation();
+    const { entrar } = useAuth();
 
   function confirmar() {
-    if (perfil == 'TechHoppers' && senha=='teste123') {
-      navigation.navigate('TelaInicial');
-    }  else {
-         alert('Usuário ou senha incorreta');
+    const deuCerto = entrar(perfil, senha);
+    if (!deuCerto) {
+      alert('Usuário ou senha incorreta');
     }
   }
 
@@ -47,7 +46,7 @@ export default function TelaAutenticacao() {
           onChangeText={onChangePerfil}
           value={perfil}
           placeholder="perfil"
-          keyboardType=""
+          autoCapitalize="none"
         />
         <Text style={styles.tituloInput}>Senha</Text>
         <TextInput
@@ -55,7 +54,7 @@ export default function TelaAutenticacao() {
           onChangeText={onChangeSenha}
           value={senha}
           placeholder="senha"
-          keyboardType="password"
+          keyboardType="secureTextEntry"
         
         />
 

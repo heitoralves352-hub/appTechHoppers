@@ -1,11 +1,9 @@
 import path from 'path';
-import connection from './src/database/connection';
 
 module.exports = {
-    client:'sqlite3' ,
-    connection: {
-        __filename:path.resolve(__dirname, 'database.sqlite'),
-    },
-    useNullAsDefault: true
+  client: 'sqlite3',
+  connection: {
+    filename: path.resolve(__dirname, 'src', 'database', 'database.sqlite'),
+  },
+  useNullAsDefault: true,
 };
-
