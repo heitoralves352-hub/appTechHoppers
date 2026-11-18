@@ -11,8 +11,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Rodape from '../../Components/Rodape';
 import { TextInput } from 'react-native';
 
-import axios from 'axios';
-axios.defaults.baseURL = 'http://192.168.43.173:3333'; 
+import api from '../services/api'; 
 
 export default function TelaCadastroColmeia({
   navigation,
@@ -29,7 +28,7 @@ export default function TelaCadastroColmeia({
   useEffect(() => {
     async function buscarColmeia(codigo: number) {
       try {
-        const response = await axios.get(`/colmeia/${codigo}`);
+        const response = await api.get(`/colmeia/${codigo}`);
         setId(response.data.id);
         setNome(response.data.nome);
         setLocal(response.data.local);
@@ -54,10 +53,10 @@ export default function TelaCadastroColmeia({
 
     try {
       if (route.params.idcolmeia == 0) {
-        await axios.post('/colmeia', colmeia);
+        await api.post('/colmeia', colmeia);
         alert('Produto Salvo com Sucesso!!!');
       } else {
-        await axios.put(`/colmeia/${route.params.idcolmeia}`, colmeia);
+        await api.put(`/colmeia/${route.params.idcolmeia}`, colmeia);
         alert('Produto Atualizado com Sucesso!!!');
       }
     } catch (err) {
@@ -85,7 +84,7 @@ export default function TelaCadastroColmeia({
           </Text>
         </Pressable>
       </View>
-      <ScrollView style={styles.conteudo}>
+      <ScrollView style={styles.conteudo} contentContainerStyle={styles.conteudoInterno}>
         <Text style={styles.text2}>Preencha os dados de sua colmeia!</Text>
 
         <Text style={styles.tituloInput}>Nome</Text>
@@ -149,12 +148,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   conteudo: {
-    
-    alignItems: 'center',
-    borderTopColor: '#black',
+    borderTopColor: 'black',
     borderTopWidth: 1,
     flexDirection: 'column',
     flex: 1,
+  },
+
+    conteudoInterno: {
+    alignItems: 'center',
   },
 
   input: {

@@ -20,7 +20,7 @@ export default function TelaInicial() {
       </Pressable>
     </View>
 
-     <ScrollView style={styles.conteudo}>
+     <ScrollView style={styles.conteudo} contentContainerStyle={styles.conteudoInterno}>
        <Text style={styles.text}>
         Informações sobre os sensores:
        </Text>
@@ -97,11 +97,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   conteudo: {
-    alignItems: 'center',
-    borderTopColor: "#black",
+    borderTopColor: "black",
     borderTopWidth:1,
     flexDirection:'column',
     flex: 1,
+  },
+    conteudoInterno: {
+    alignItems: 'center',
   },
  
   text: {

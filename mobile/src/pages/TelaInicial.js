@@ -31,7 +31,7 @@ export default function TelaInicial() {
           </Text>
         </Pressable>
       </View>
-      <ScrollView style={styles.conteudo}>
+      <ScrollView style={styles.conteudo} contentContainerStyle={styles.conteudoInterno}>
         <Botao
           titulo="Nome do Usuário"
           cor="#402b2b"
@@ -98,11 +98,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   conteudo: {
-    alignItems: 'center',
-    borderTopColor: '#black',
+    borderTopColor: 'black',
     borderTopWidth: 1,
     flexDirection: 'column',
     flex: 1,
+  },
+    conteudoInterno: {
+    alignItems: 'center',
   },
 
   text: {

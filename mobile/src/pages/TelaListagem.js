@@ -12,9 +12,8 @@ import {
 } from 'react-native';
 import { Feather as Icon } from '@expo/vector-icons';
 import Rodape from '../../Components/Rodape';
-import axios from 'axios';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-axios.defaults.baseURL = 'http://192.168.43.173:3333';
+import api from '../services/api';
 
 export default function TelaListagem({ navigation }: { navigation: any }) {
   const [response, setResponse] = useState([]);
@@ -25,7 +24,7 @@ export default function TelaListagem({ navigation }: { navigation: any }) {
   const listarComeias = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get('/colmeias');
+      const { data } = await api.get('/colmeias');
       setResponse(data);
       setError('');
     } catch (err) {
@@ -55,7 +54,7 @@ export default function TelaListagem({ navigation }: { navigation: any }) {
       {
         text: 'Sim',
         onPress: () => {
-          axios.delete(`colmeia/${id}`);
+          api.delete(`colmeia/${id}`);
           setLoad(!load);
           Alert.alert('Colmeia excluída com sucesso!');
         },
@@ -90,7 +89,7 @@ export default function TelaListagem({ navigation }: { navigation: any }) {
 
 
 
-      <ScrollView style={styles.conteudo}>
+      <ScrollView style={styles.conteudo} contentContainerStyle={styles.conteudoInterno}>
       <Text style={styles.text2}>Aqui está a sua lista de colmeias!!!
       Atualize ou Exclua os seus dados.
       </Text>
@@ -155,12 +154,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   conteudo: {
-    alignItems: 'center',
-    borderTopColor: '#black',
+    borderTopColor: 'black',
     borderTopWidth: 1,
     flexDirection: 'column',
     flex: 1,
   },
+
+    conteudoInterno: {
+    alignItems: 'center',
+  },
+  
   text: {
     fontSize: 24,
     fontWeight: 'bold',
