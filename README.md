@@ -8,15 +8,15 @@ O projeto faz parte de uma proposta de colmeia com sensores (temperatura, umidad
 
 <table>
   <tr>
-    <td align="center"><img src="imagens/capa.png" width="200"><br>Capa</td>
-    <td align="center"><img src="imagens/login.png" width="200"><br>Login</td>
-    <td align="center"><img src="imagens/inicio.png" width="200"><br>Início</td>
-    <td align="center"><img src="imagens/menu.png" width="200"><br>Menu</td>
+    <td align="center"><img src="imagens/capa.jpeg" width="200"><br>Capa</td>
+    <td align="center"><img src="imagens/login.jpeg" width="200"><br>Login</td>
+    <td align="center"><img src="imagens/inicio.jpeg" width="200"><br>Início</td>
+    <td align="center"><img src="imagens/menu.jpeg" width="200"><br>Menu</td>
   </tr>
   <tr>
-    <td align="center"><img src="imagens/listagem.png" width="200"><br>Minhas colmeias</td>
-    <td align="center"><img src="imagens/cadastro.png" width="200"><br>Cadastro</td>
-    <td align="center"><img src="imagens/saiba-mais.png" width="200"><br>Saiba mais</td>
+    <td align="center"><img src="imagens/listagem.jpeg" width="200"><br>Minhas colmeias</td>
+    <td align="center"><img src="imagens/cadastro.jpeg" width="200"><br>Cadastro</td>
+    <td align="center"><img src="imagens/saiba-mais.jpeg" width="200"><br>Saiba mais</td>
     <td></td>
   </tr>
 </table>
