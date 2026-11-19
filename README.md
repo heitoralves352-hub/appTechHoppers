@@ -98,4 +98,4 @@ O app foi criado em **2024** no Expo Snack. Em **2026** ele foi trazido para o G
 
 ## 👤 Autor
 
-Desenvolvido por **[Heitor Barros Alves]**.
+Desenvolvido por **Heitor Barros Alves**.
