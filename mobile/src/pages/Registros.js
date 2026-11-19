@@ -1,84 +1,73 @@
-import { Pressable, View, Text, StyleSheet, SafeAreaView, ScrollView} from "react-native";
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, Pressable } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { useNavigation } from '@react-navigation/native';
 import Rodape from '../../Components/Rodape';
-import { useNavigation } from '@react-navigation/native'
-export default function TelaInicial() {
-  const navigation = useNavigation();
 
-  function onPressFunction(){
-    navigation.openDrawer();
-  }
+// Os dados ficam numa lista separada do visual.
+// Para adicionar um sensor novo, é só incluir mais um item aqui.
+const SENSORES = [
+  {
+    icone: 'thermometer',
+    titulo: 'Umidade e temperatura',
+    descricao:
+      'Sensor com saída digital e leituras estáveis. Controla a umidade e a temperatura dentro da colmeia.',
+  },
+  {
+    icone: 'axis-arrow',
+    titulo: 'Acelerômetro e giroscópio (MPU-6050)',
+    descricao:
+      'Mede movimento e inclinação. Na colmeia, avisa se a caixa foi inclinada ou mexida.',
+  },
+  {
+    icone: 'scale-balance',
+    titulo: 'Sensor de peso (balança)',
+    descricao:
+      'Acompanha o peso da produção das abelhas, como o mel e outros insumos. Feito em metal resistente.',
+  },
+  {
+    icone: 'signal-distance-variant',
+    titulo: 'Sensor de distância ultrassônico',
+    descricao:
+      'Emite ondas sonoras de alta frequência e mede o tempo que elas levam para voltar, calculando a distância até um objeto.',
+  },
+];
+
+export default function Registros() {
+  const navigation = useNavigation();
 
   return (
     <SafeAreaView style={styles.container}>
-    <View style={styles.topo}>
-      <Pressable onPress={onPressFunction}>
-       <Text style={styles.text}>
-       <MaterialCommunityIcons name="reorder-horizontal" size={35} color="#black" />
-       Saiba Mais
-       </Text>
-      </Pressable>
-    </View>
-
-     <ScrollView style={styles.conteudo} contentContainerStyle={styles.conteudoInterno}>
-       <Text style={styles.text}>
-        Informações sobre os sensores:
-       </Text>
-
-          <Pressable
-          style={[{ backgroundColor: '#402b2b' }, styles.botao]}
-          >
-         <Text style={styles.texttitulo}>
-        <MaterialCommunityIcons name="thermometer" size={25} color="#white" />
-          Módulo sensor de Umidade e Temperatura:
-          </Text>
-          <Text style={styles.textconteudo}>
-          Esse aparelho possui saída de sinal digital, além de fornecer dados confiáveis e estáveis.
-         Sua função é controlar a umidade e temperatura interna da colmeia.
-       </Text>
+      <View style={styles.topo}>
+        <Pressable style={styles.botaoMenu} onPress={() => navigation.openDrawer()}>
+          <MaterialCommunityIcons name="reorder-horizontal" size={32} color="#402b2b" />
         </Pressable>
+        <Text style={styles.tituloTopo}>Saiba mais</Text>
+      </View>
 
-        <Pressable
-          style={[{ backgroundColor: '#402b2b' }, styles.botao]}
-          >
-         <Text style={styles.texttitulo}>
-        <MaterialCommunityIcons name="motion-sensor" size={25} color="#white" />
-         Acelerômetro e giroscópio(MPU-6050):
+      <ScrollView style={styles.conteudo} contentContainerStyle={styles.conteudoInterno}>
+        <View style={styles.introducao}>
+          <MaterialCommunityIcons name="beehive-outline" size={48} color="#402b2b" />
+          <Text style={styles.tituloIntro}>Colmeia inteligente</Text>
+          <Text style={styles.textoIntro}>
+            Cada colmeia pode receber sensores que acompanham a saúde das abelhas e a
+            produção de mel. Conheça cada um deles:
           </Text>
-          <Text style={styles.textconteudo}>
-          Mede a variação da velocidade de um objeto.Consegue medir as forças resultantes
-          do movimento (aceleração linear) e da gravidade.
-          Em nossa colmeia é usada para ver a inclinação.
-       </Text>
-        </Pressable>
-         <Pressable
-          style={[{ backgroundColor: '#402b2b' }, styles.botao]}
-          >
-         <Text style={styles.texttitulo}>
-        <MaterialCommunityIcons name="scale-bathroom" size={25} color="#white" />
-         Sensor de peso(Balança): 
-          </Text>
-          <Text style={styles.textconteudo}>
-          Utilizado para monitorar o peso da produção das abelhas, não apenas mel
-           como outros insumos. Fabricado em metal resistente e a tensão de saída varia conforme o peso.
+        </View>
 
-       </Text>
-        </Pressable>
-        <Pressable
-          style={[{ backgroundColor: '#402b2b' }, styles.botao]}
-          >
-         <Text style={styles.texttitulo}>
-        <MaterialCommunityIcons name="signal-distance-variant" size={25} color="#white" />
-         Módulo de Sensor de Distância Ultrassônico:
-          </Text>
-          <Text style={styles.textconteudo}>
-           Mede a distância entre ele e um objeto ao emitir ondas sonoras alta frequência (ultrassônicas)
-          e medir o tempo que leva para essas ondas retornarem após refletirem no objeto.
+        {SENSORES.map((sensor) => (
+          <View key={sensor.titulo} style={styles.card}>
+            <View style={styles.circuloIcone}>
+              <MaterialCommunityIcons name={sensor.icone} size={28} color="#F9E3AE" />
+            </View>
+            <View style={styles.textosCard}>
+              <Text style={styles.tituloCard}>{sensor.titulo}</Text>
+              <Text style={styles.descricaoCard}>{sensor.descricao}</Text>
+            </View>
+          </View>
+        ))}
+      </ScrollView>
 
-       </Text>
-        </Pressable>
-   </ScrollView>
-    <Rodape />
+      <Rodape />
     </SafeAreaView>
   );
 }
@@ -86,51 +75,83 @@ export default function TelaInicial() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "left",
-    justifyContent: "left",
     backgroundColor: '#F9E3AE',
   },
   topo: {
-   height:50,
-     flexDirection: 'row',
-    justifyContent: 'left',
-    alignItems: 'center',
-  },
-  conteudo: {
-    borderTopColor: "black",
-    borderTopWidth:1,
-    flexDirection:'column',
-    flex: 1,
-  },
-    conteudoInterno: {
-    alignItems: 'center',
-  },
- 
-  text: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color:'402b2b',
-    marginLeft:10,
-  },
-  textconteudo: {
-    fontSize: 7,
-    textAlign:'center',
-    color:'white',
-  },
-  texttitulo: {
-    fontSize: 9,
-    fontWeight:'bold',
-    textAlign:'center',
-    color:'white',
-  },
-   botao: {
-    width: 400,
-    height: 120,
-    borderRadius: 5,
+    height: 56,
     flexDirection: 'row',
     alignItems: 'center',
-    margin: 10,
-    paddingLeft: 5,
-    marginVertical: 8,
-   },
+    paddingHorizontal: 12,
+  },
+  botaoMenu: {
+    marginRight: 8,
+  },
+  tituloTopo: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#402b2b',
+  },
+  conteudo: {
+    flex: 1,
+    borderTopColor: '#402b2b',
+    borderTopWidth: 1,
+  },
+  conteudoInterno: {
+    padding: 16,
+    gap: 14,
+  },
+  introducao: {
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  tituloIntro: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#402b2b',
+    marginTop: 6,
+  },
+  textoIntro: {
+    fontSize: 15,
+    color: '#5c4033',
+    textAlign: 'center',
+    marginTop: 6,
+    lineHeight: 21,
+  },
+  card: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 14,
+    // sombra (iPhone)
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 2 },
+    // sombra (Android)
+    elevation: 3,
+  },
+  circuloIcone: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: '#402b2b',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 14,
+  },
+  textosCard: {
+    flex: 1,
+  },
+  tituloCard: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#402b2b',
+    marginBottom: 4,
+  },
+  descricaoCard: {
+    fontSize: 14,
+    color: '#5c4033',
+    lineHeight: 20,
+  },
 });
